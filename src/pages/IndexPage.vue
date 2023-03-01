@@ -1,23 +1,19 @@
 <template>
   <q-page>
-    <div class="row justify-center">
-      <template v-if="baseBoxesOn === 'contestantList' && getContestants.length >= 1 ">
-        <template v-for="n in getContestants" :key="n.name">
-          <draw-box :id="n.numberPurchased" :picked="picked"  :purchaser-name="n.name"
-            ref="idNumberRef"/>
-        </template>
-      </template>
-      <template v-else>
-        <template v-for="n in numberSold" :key="n.numberSold">
-          <draw-box :id="n" :picked="picked" ref="idNumberRef"/>
-        </template>
-      </template>
-    </div>
-    <template v-for=" k in chunkedRows" :key="k">
-      <div class="row">
-        <draw-box v-for="n in k" :key="n" :id="n" />
+    <template v-if="store.raffleBasedOn === 'contestantList' && getContestants.length >= 1 "
+
+    >
+      <div class="row justify-center" v-for="item in chunkedRows" :key="item">
+       <draw-box v-for="key in item" :key="key" :id="key.numberPurchased" :purchaser-name="key.name" />
       </div>
-    </template >
+    </template>
+    <template v-else>
+
+      <div class="row justify-center" v-for="item in chunkedRows" :key="item">
+        <draw-box v-for="key in item" :key="key" :id="key" />
+      </div>
+    </template>
+
   </q-page>
   <div class="q-py-md">
 
@@ -49,7 +45,7 @@ import DrawBox from "components/drawBox.vue";
 
 
 const store = useRaffleSettingsStore();
-const {numberSold, numberPickedColor, baseBoxesOn} = storeToRefs(store)
+const {numberSold, numberPickedColor, raffleBasedOn} = storeToRefs(store)
 const contestantsStore = useContestantStore()
 const {getContestants} = storeToRefs(contestantsStore)
 
@@ -81,10 +77,10 @@ const chunkedRows = computed( () => {
   const itemsPer = 20;
   let source = [];
 
-  if (baseBoxesOn === 'contestantList' && getContestants.length >= 1) {
-    console.log('contestantsList', getContestants )
-    source = getContestants
 
+
+  if (store.raffleBasedOn === 'contestantList' ) {
+    source = getContestants.value
   } else {
     let ns = Array.from({length: numberSold.value }, (v, k) => k+1);
 
@@ -95,11 +91,7 @@ const chunkedRows = computed( () => {
     group.push(source.slice(i, i+itemsPer));
   }
 
-  console.log('group', group )
   return group;
-
-
-
 })
 
 const setBGColor = () => {
