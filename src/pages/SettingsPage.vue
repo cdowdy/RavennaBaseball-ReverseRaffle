@@ -145,7 +145,63 @@ export default {
     return {
       ticketsSold,
       pickedColor,
-      options: [ 100, 150, 200, 250, 300, 350, 400, 450, 500],
+      options: [
+        {
+          label: '100',
+          value: 100,
+          picked: false
+
+        },
+        {
+          label: '150',
+          value: 150,
+          picked: false
+
+        },
+        {
+          label: '200',
+          value: 200,
+          picked: false
+
+        },
+        {
+          label: '250',
+          value: 250,
+          picked: false
+
+        },
+        {
+          label: '300',
+          value: 300,
+          picked: false
+
+        },
+        {
+          label: '350',
+          value: 350,
+          picked: false
+
+        },
+        {
+          label: '400',
+          value: 400,
+          picked: false
+
+        },
+        {
+          label: '450',
+          value: 450,
+          picked: false
+
+        },
+        {
+          label: '500',
+          value: 500,
+          picked: false
+
+        },
+
+      ],
       allContestants,
       baseBoxesOn,
       dialog: ref(false),
