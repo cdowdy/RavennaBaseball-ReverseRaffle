@@ -93,6 +93,13 @@
     </template>
     <div class="q-mt-lg">
       <q-input
+        v-model="pickTimer"
+        label="Time Between Picks. Default is 20 Seconds"
+      >
+      </q-input>
+    </div>
+    <div class="q-mt-lg">
+      <q-input
         filled
         v-model="pickedColor"
         label="Picked Number Color"
@@ -131,17 +138,10 @@ export default {
   setup () {
     const settingsStore = useRaffleSettingsStore()
     const contestantsStore = useContestantStore()
-    const { ticketsSold, pickedColor, baseBoxesOn } = storeToRefs(settingsStore)
+    const { ticketsSold, pickedColor, baseBoxesOn, pickTimer } = storeToRefs(settingsStore)
     const { allContestants } = storeToRefs(contestantsStore)
     const $q = useQuasar();
 
-    // try {
-    //   console.log( $q.localStorage.has('pickedColor'))
-    //   $q.localStorage.set( 'pickedColor',store.pickedColor)
-    // } catch (e ) {
-    //   console.error( e )
-    // }
-    // const csv = ref()
     return {
       ticketsSold,
       pickedColor,
@@ -204,6 +204,7 @@ export default {
       ],
       allContestants,
       baseBoxesOn,
+      pickTimer,
       dialog: ref(false),
       maximizedToggle: ref(true),
       contestantColumns: [
