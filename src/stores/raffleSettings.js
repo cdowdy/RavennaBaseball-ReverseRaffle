@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia'
+import { range } from 'src/js/utilities'
 
 export const useRaffleSettingsStore = defineStore('settings', {
   state: () => ({
-    ticketsSold: 200,
+    ticketsSold: [ 200 ],
     pickedColor: '#08133A',
-    baseBoxesOn: 'numbers'
+    baseBoxesOn: 'numbers',
+    pickTimer: 20
   }),
 
   getters: {
@@ -16,6 +18,9 @@ export const useRaffleSettingsStore = defineStore('settings', {
     },
     raffleBasedOn ( state ) {
       return state.baseBoxesOn
+    },
+    pickTime( state ) {
+      return state.pickTimer
     }
   },
 
