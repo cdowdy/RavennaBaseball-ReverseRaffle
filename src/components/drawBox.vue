@@ -1,14 +1,11 @@
 <template>
   <div class="column draw-box--container" >
-    <div class="col q-card--bordered draw-box" :id=" id ">
-      <p class="text-center text-h6">
+    <div class="col q-card--bordered draw-box" :class="picked && 'bg-primary text-white'" :id=" id ">
+      <p class="text-center">
         {{ id }}
       </p>
-      <p v-if="purchaserName" class="text-center text-caption">
-        {{ purchaserName }}
-      </p>
       <template v-if="picked">
-        <q-input outlined :value="purchaserName" />
+        <modal-dialog  />
       </template>
 
     </div>
@@ -17,12 +14,18 @@
 
 <script>
 import { defineComponent } from 'vue'
+import ModalDialog from "components/modalDialog.vue";
+
 export default defineComponent({
   name: "drawBox",
+  components: {ModalDialog},
 
   props: {
+    items: {
+      type: Object
+    },
     id: {
-      type:[ Number, String ],
+      type: [Number, String],
       default: 0
     },
     purchaserName: {
@@ -32,9 +35,11 @@ export default defineComponent({
     picked: {
       type: Boolean,
       default: false
-    }
+    },
+    blob: {
+      type: Object
+    },
   }
 
-
-})
+  })
 </script>
