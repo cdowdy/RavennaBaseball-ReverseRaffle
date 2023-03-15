@@ -7,10 +7,13 @@ export const useContestantStore = defineStore('contestants', {
 
   getters: {
     getContestants (state) {
-      let allState = state.allContestants.map( value => ( {
-        ...value,  picked: false
-      }))
-      this.allContestants = allState
+      if ( state.allContestants) {
+        let allState = state.allContestants.map( value => ( {
+          ...value,  picked: false
+        }))
+        this.allContestants = allState
+      }
+
       return state.allContestants
     },
     getContestantByNumber (state)  {
@@ -20,10 +23,18 @@ export const useContestantStore = defineStore('contestants', {
     getChunkedRows (state) {
       let group = [];
       let itemsPer = 20;
+      if ( this.getContestants.length > 249 ) {
+        itemsPer = 30
+      }
       for(var i = 0; i < this.getContestants.length; i += itemsPer) {
         group.push(this.getContestants.slice(i, i+itemsPer));
       }
       return group
+    },
+    getPickedContestants( state ) {
+      let contest = state.allContestants.find ( ( contestant ) => contestant.picked === true)
+      console.log(contest)
+      return Object.fromEntries()
     }
   },
 
