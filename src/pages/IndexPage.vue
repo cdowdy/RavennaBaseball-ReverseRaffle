@@ -249,6 +249,9 @@ function getRandom(input) {
       font-size: 20px;
       margin: 20px 0;
     }
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .fill-height-more {
