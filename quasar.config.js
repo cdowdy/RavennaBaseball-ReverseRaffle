@@ -106,7 +106,9 @@ module.exports = configure(function (/* ctx */) {
 
       // Quasar plugins
       plugins: [
-        'LocalStorage'
+        'LocalStorage',
+        'Dialog',
+        'BottomSheet'
       ]
     },
 
@@ -178,7 +180,7 @@ module.exports = configure(function (/* ctx */) {
 
       inspectPort: 5858,
 
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: 'builder', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -190,13 +192,16 @@ module.exports = configure(function (/* ctx */) {
         // protocol: 'myapp://path',
 
         // Windows only
-        // win32metadata: { ... }
+        win32metadata: {
+          arch: "x64"
+        }
       },
 
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'ravennabaseball'
+        appId: 'ravennabaseball',
+        target: 'nsis'
       }
     },
 
