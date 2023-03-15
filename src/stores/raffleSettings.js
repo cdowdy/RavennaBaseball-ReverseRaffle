@@ -32,11 +32,13 @@ export const useRaffleSettingsStore = defineStore('settings', {
 
     getTicketNumberList( state ) {
       // let numberRange = range(1, this.numberSold.value, 1 )
-      state.ticketNumbers= range(1, this.numberSold, 1 );
+      state.ticketNumbers = range(1, this.numberSold, 1 );
       let allState = state.ticketNumbers.map( value => ( {
         ...value, number: value,  picked: false
       }))
-      return state.ticketNumbers = allState
+      state.ticketNumbers = allState
+
+      return state.ticketNumbers
     },
 
     getChunkedNumberRows( state ) {
