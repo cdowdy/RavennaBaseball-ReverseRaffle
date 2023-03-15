@@ -10,7 +10,7 @@
           <q-route-tab to="/" label="Raffle" />
         </q-tabs>
       </q-header>
-<q-page-container class="flex justify-center row">
+<q-page-container class="flex justify-center row q-mb-md">
   <form class="col-8" action="">
     <div class="q-gutter-sm">
       <p>
@@ -29,12 +29,52 @@
           </ul>
         </li>
       </ul>
-      <q-radio v-model="baseBoxesOn" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="numbers" label="Use Numbers Only" />
-      <q-radio v-model="baseBoxesOn" checked-icon="task_alt" unchecked-icon="panorama_fish_eye" val="contestantList" label="I have a Contestant List" />
+      <div class="q-pa-md q-mb-md">
+        <div class="row ">
+
+            <p>
+              How the Contestants will be generated
+            </p>
+        </div>
+        <div class="row q-mb-md">
+
+          <q-radio v-model="baseBoxesOn"
+                   checked-icon="task_alt"
+                   unchecked-icon="panorama_fish_eye"
+                   val="numbers"
+                   label="Use Numbers Only" />
+          <q-radio v-model="baseBoxesOn"
+                   checked-icon="task_alt"
+                   unchecked-icon="panorama_fish_eye"
+                   val="contestantList"
+                   label="I have a Contestant List" />
+        </div>
+        <div class="row q-mt-md">
+          <p>
+            How the numbers will be drawn:
+          </p>
+        </div>
+        <div class="row">
+            <q-option-group
+              :options="numberDrawnOptions"
+              type="radio"
+              v-model="drawType"
+            />
+        </div>
+      </div>
+
     </div>
+    <!--
+    Numbers Only
+     -->
     <template v-if="baseBoxesOn === 'numbers'">
-      <q-select v-model="ticketsSold" :options="options" label="Number Of Tickets Sold" />
+      <q-select v-model="ticketsSold"
+                :options="options"
+                label="Number Of Tickets Sold" />
     </template>
+    <!--
+    contestant list
+    -->
     <template v-if="baseBoxesOn === 'contestantList'">
       <vue-csv-import
         v-model="allContestants"
@@ -49,7 +89,7 @@
         <vue-csv-map :auto-match="false"></vue-csv-map>
       </vue-csv-import>
 
-      <div v-if="allContestants.length >= 1">
+      <div v-if="allContestants.length >= 1" class="row">
         <q-btn label="Preview Contestants" color="primary" @click="dialog = true" />
         <q-dialog
           v-model="dialog"
@@ -91,6 +131,9 @@
         </q-dialog>
       </div>
     </template>
+    <template v-if="drawType === 'random' ">
+
+
     <div class="q-mt-lg">
       <q-input
         v-model="pickTimer"
@@ -113,11 +156,30 @@
         </template>
       </q-input>
     </div>
+    </template>
 <!--    <div class="q-mt-sm">-->
 <!--      <q-btn label="Save Settings" type="submit" @click="updateTicketsSoldNumber()" color="primary"/>-->
 <!--    </div>-->
   </form>
+
 </q-page-container>
+  <div class="q-py-md q-mt-lg" >
+
+    <div class="row justify-center items-center">
+<!--      <div class="col-4 items-center">-->
+<!--        <router-link class="q-mb-auto q-mt-auto  text-weight-medium justify-center"-->
+<!--                     to="/raffle-storage">-->
+<!--          Raffle Storage-->
+<!--        </router-link>-->
+<!--      </div>-->
+      <div class="col-4">
+        <router-link class="q-mb-auto q-mt-auto  text-weight-medium justify-center"
+                     to="/picked">
+          Picked Numbers
+        </router-link>
+      </div>
+    </div>
+  </div>
 <!--  </q-layout>-->
   <q-page-container>
     <router-view />
@@ -138,7 +200,7 @@ export default {
   setup () {
     const settingsStore = useRaffleSettingsStore()
     const contestantsStore = useContestantStore()
-    const { ticketsSold, pickedColor, baseBoxesOn, pickTimer } = storeToRefs(settingsStore)
+    const { ticketsSold, pickedColor, baseBoxesOn, pickTimer, drawType } = storeToRefs(settingsStore)
     const { allContestants } = storeToRefs(contestantsStore)
     const $q = useQuasar();
 
@@ -220,6 +282,11 @@ export default {
           align: 'center',
           field: 'numberPurchased'
         },
+      ],
+      drawType,
+      numberDrawnOptions: [
+        { label: 'Manually Pick', value: 'manual' },
+        { label: 'Randomly Picked', value: 'random' },
       ]
 
       // csv
