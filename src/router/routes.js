@@ -5,7 +5,9 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: '/settings', component: () => import('pages/SettingsPage.vue') }
+      { path: '/settings', component: () => import('pages/SettingsPage.vue') },
+      { path: '/picked', component: () => import('pages/pickedContestants.vue') },
+      { path: '/raffle-storage', component: () => import('pages/raffleStorage.vue') },
     ]
   },
 
