@@ -117,7 +117,7 @@ const stopRaffle = () => {
 
 function numberOnlyPick(payload) {
   let dialogSeconds = 3
-  console.log('payload', payload )
+
   const dialog =  $q.dialog({
     component: modalDialog,
 
