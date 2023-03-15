@@ -12,29 +12,53 @@
                  :id="key.numberPurchased"
                  :picked="key.picked"
                  :purchaserName="key.name"
+                 @manually-selected="manuallyPicked(key)"
        />
       </div>
     </template>
-    <template v-else>
-      <div class="row flex-center number-row"
-           v-for="item in chunkedRows"
-           :key="item">
-        <draw-box v-for="key in item" :key="key" :id="key.value" :picked="key.picked" />
+    <!-- if the getTicketNumbersList has entries and is bigger than or equal too 1 -->
+    <template v-else-if="store.raffleBasedOn === 'numbers' && store.getTicketNumberList.length >= 1 ">
+      <div class="row flex-center number-row" v-for="item in  store.getChunkedNumberRows  "
+           :key="item.picked">
+
+        <draw-box v-for="(key, value ) in item"
+                  :key="value.picked"
+                  :blob="key"
+                  :id="key.number"
+                  :picked="key.picked"
+                  @manually-selected="numberOnlyPick(key)"
+        />
       </div>
+
+    </template>
+    <!-- if not then show the raven logo -->
+    <template v-else>
+     <div class="row justify-center">
+       <div class="col-6">
+         <q-img src="~assets/raven_400x400.png" fit="contain"/>
+         <h4 class="text-center text-primary">Ravenna Baseball</h4>
+       </div>
+     </div>
     </template>
 
   </q-page>
-  <div class="q-py-md">
+  <div class="q-py-md" >
 
     <div class="row justify-center items-center">
-      <div class="col">
+      <div class="col-4" v-if="getDrawType === 'random' ">
         <q-btn color="primary" label="Start" @click="startRaffle()"/>
         <q-btn color="secondary" label="Stop Raffle" @click="stopRaffle()" />
       </div>
-      <div class="col">
+      <div class="col-4 items-center">
         <router-link class="q-mb-auto q-mt-auto  text-weight-medium justify-center"
                      to="/settings">
           Settings
+        </router-link>
+      </div>
+      <div class="col-4">
+        <router-link class="q-mb-auto q-mt-auto  text-weight-medium justify-center"
+                     to="/picked">
+          Picked Numbers
         </router-link>
       </div>
     </div>
@@ -44,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref} from 'vue'
+import {computed, ref} from 'vue'
 import {useRaffleSettingsStore} from "stores/raffleSettings";
 import { useContestantStore} from 'stores/raffleContestants'
 import {useQuasar} from "quasar";
@@ -52,10 +76,11 @@ import {storeToRefs} from "pinia";
 import DrawBox from "components/drawBox.vue";
 import _sample from 'lodash/sample'
 import modalDialog from "components/modalDialog.vue";
+import {range} from "src/js/utilities";
 
 
 const store = useRaffleSettingsStore();
-const {numberSold, numberPickedColor, raffleBasedOn} = storeToRefs(store)
+const {numberSold, numberPickedColor, raffleBasedOn, getDrawType , getChunkedNumberRows } = storeToRefs(store)
 const contestantsStore = useContestantStore()
 
 
@@ -70,6 +95,7 @@ let intervalID;
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#sequence_generator_range
 // const numberIsPickedColor = ref( numberPickedColor );
 // const setBGColor = () => { console.log( 'clicked' )}
+
 
 
 
@@ -89,14 +115,86 @@ const stopRaffle = () => {
   intervalID = null;
 }
 
+function numberOnlyPick(payload) {
+  let dialogSeconds = 3
+  console.log('payload', payload )
+  const dialog =  $q.dialog({
+    component: modalDialog,
+
+    componentProps:{
+      pickedName: payload.number
+    },
+  })
+    .onOk(() => {
+    })
+    .onCancel(() => {
+    })
+    .onDismiss(() => {
+      clearTimeout( dialogTimer )
+    })
+
+  const dialogTimer = setInterval(() => {
+    dialogSeconds--
+
+    if (dialogSeconds > 0) {
+      dialog.update({
+        message: `Autoclosing in ${dialogSeconds} second${dialogSeconds > 1 ? 's' : ''}.`
+      })
+    }
+    else {
+      clearInterval(dialogTimer)
+      dialog.hide()
+    }
+  }, 1000)
+
+
+
+  return store.numberOnlyPicked( payload.number )
+}
+
+function manuallyPicked(payload) {
+  let dialogSeconds = 3
+
+
+  const dialog =  $q.dialog({
+    component: modalDialog,
+
+    componentProps:{
+      pickedName: payload.name,
+      pickedNumber: payload.numberPurchased
+    },
+  })
+    .onOk(() => {
+    })
+    .onCancel(() => {
+    })
+    .onDismiss(() => {
+      clearTimeout( dialogTimer )
+    })
+
+  const dialogTimer = setInterval(() => {
+    dialogSeconds--
+
+    if (dialogSeconds > 0) {
+      dialog.update({
+        message: `Autoclosing in ${dialogSeconds} second${dialogSeconds > 1 ? 's' : ''}.`
+      })
+    }
+    else {
+      clearInterval(dialogTimer)
+      dialog.hide()
+    }
+  }, 1000)
+
+
+
+  return contestantsStore.picked( payload.numberPurchased )
+}
 
 function getRandom(input) {
-  console.log('getContestants from random', getContestants.value
-  )
 
   let index = _sample(input)
   let dialogSeconds = 3
-  console.log('index', index )
 
   const dialog =  $q.dialog({
     component: modalDialog,
@@ -141,8 +239,10 @@ function getRandom(input) {
 <style lang="scss">
 .draw-box--container {
   //height: 10%;
-  //width: v-bind(chunkedRowBoxSize);
-  min-width: 4.9vw;
+
+  //min-width: 4.9vw;
+  min-width: 3.2vw;
+
   //min-height: 10vh;
 
     & p {
