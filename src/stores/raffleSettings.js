@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia'
-import  _filter from 'lodash/filter'
-import { range } from 'src/js/utilities'
+import {defineStore} from 'pinia'
+import _filter from 'lodash/filter'
+import {range} from 'src/js/utilities'
 
 export const useRaffleSettingsStore = defineStore('settings', {
   state: () => ({
@@ -9,7 +9,8 @@ export const useRaffleSettingsStore = defineStore('settings', {
     baseBoxesOn: 'numbers',
     pickTimer: 20,
     drawType: 'manual',
-    ticketNumbers: null
+    ticketNumbers: [],
+    firstTimeRun: true
   }),
 
   getters: {
@@ -32,11 +33,11 @@ export const useRaffleSettingsStore = defineStore('settings', {
 
     getTicketNumberList( state ) {
       // let numberRange = range(1, this.numberSold.value, 1 )
-      state.ticketNumbers = range(1, this.numberSold, 1 );
-      let allState = state.ticketNumbers.map( value => ( {
-        ...value, number: value,  picked: false
+      state.ticketNumbers = range(1, this.numberSold.value, 1 );
+
+      state.ticketNumbers = state.ticketNumbers.map(value => ({
+        ...value, number: value, picked: false
       }))
-      state.ticketNumbers = allState
 
       return state.ticketNumbers
     },
@@ -58,11 +59,11 @@ export const useRaffleSettingsStore = defineStore('settings', {
     },
 
     getPickedNumbers( state ) {
-      // let contest = state.ticketNumbers.find ( ( contestant ) => contestant.picked === true)
-      let pickedNumbers = _filter( state.ticketNumbers, 'picked')
+      return _filter(this.getTicketNumberList, 'picked')
+    },
 
-
-      return Object.fromEntries( contest )
+    getFirstTimeRun( state ) {
+      return state.firstTimeRun
     }
   },
 
