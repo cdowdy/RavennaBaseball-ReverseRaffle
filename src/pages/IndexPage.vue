@@ -251,6 +251,8 @@ function getRandom(input) {
     }
   &:hover {
     cursor: pointer;
+    background-color: $primary-lightend;
+    color: white;
   }
 }
 
