@@ -13,6 +13,7 @@
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
 $primary   : #08133A;
+$primary-lightend: scale-color($primary, $lightness: 50%);
 $secondary : #e10027;
 $accent    : #9C27B0;
 
