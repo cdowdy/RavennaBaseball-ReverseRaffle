@@ -149,7 +149,7 @@ function numberOnlyPick(payload) {
 
 
 
-  return store.numberOnlyPicked( payload.number )
+  return store.picked( payload.number )
 }
 
 function manuallyPicked(payload) {
