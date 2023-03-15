@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import  _filter from 'lodash/filter'
 import { range } from 'src/js/utilities'
 
 export const useRaffleSettingsStore = defineStore('settings', {
@@ -52,11 +53,19 @@ export const useRaffleSettingsStore = defineStore('settings', {
         group.push(this.getTicketNumberList.slice(i, i+itemsPer));
       }
       return group
+    },
+
+    getPickedNumbers( state ) {
+      // let contest = state.ticketNumbers.find ( ( contestant ) => contestant.picked === true)
+      let pickedNumbers = _filter( state.ticketNumbers, 'picked')
+
+
+      return Object.fromEntries( contest )
     }
   },
 
   actions: {
-      numberOnlyPicked ( numberToFind ) {
+      picked ( numberToFind ) {
 
         console.log('numberToFind', numberToFind )
 
